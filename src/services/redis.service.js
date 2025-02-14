@@ -50,13 +50,13 @@ const acquireLock = async (productId,quantity,cartId)=>{
     const expireTime = 3000 // 3 second tam lock
 
     for (let i = 0; i < retryTime.length; i++) {
-        // tao 1 key, thang nao nam giu duoc key thi duoc vao
+        // create a key, whoever holds the key can enter
         const result = await setnxAsync(key,expireTime)
-        // neu tra ve = 0 thì có r thì dc vao
-        // neu tra ve = 1 thi tao moi
+        // If return = 0 then there is r then it can be entered
+        // if return = 1 then create new
         if(result ===1)
         {
-            // thao tac voi inventory (kho)
+            // inventory operations
             const isReservation = await reservationInventory({
                 productId,quantity,cartId
             })
