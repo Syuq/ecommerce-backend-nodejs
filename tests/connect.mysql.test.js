@@ -8,11 +8,11 @@ const pool = mysql.createPool({
   database: "shopDEV",
 });
 
-const batchSize = 1000;
-const totalSize = 1_000_000;
+const batchSize = 100000;
+const totalSize = 10_000_000;
 
 let currentId = 1;
-console.time(":::TIMEER:::");
+console.time(":::TIMMER:::");
 const insertBatch = async () => {
   const values = [];
   for (let i = 0; i < batchSize && currentId <= totalSize; i++) {
@@ -24,7 +24,7 @@ const insertBatch = async () => {
   }
 
   if (!values.length) {
-    console.timeEnd(":::TIMER:::");
+    console.timeEnd(":::TIMMER:::");
     pool.end((err) => {
       if (err) {
         console.log(`error occurred while running batch`);
