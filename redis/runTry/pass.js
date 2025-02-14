@@ -4,7 +4,7 @@ async function hashPassword(password) {
   try {
     // Generate a salt with 128-bit strength
     const saltRounds = 10;
-    const salt = await bcrypt.genSalt(saltRounds);
+    const salt = '$2b$10$I3dRHUpcOZb/4ZM5fLCH.u'// await bcrypt.genSalt(saltRounds);
     console.log(`::salt:`, salt)
 
     // Hash the password using the generated salt

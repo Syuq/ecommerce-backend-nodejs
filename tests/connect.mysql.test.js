@@ -12,7 +12,7 @@ const batchSize = 100000;
 const totalSize = 10_000_000;
 
 let currentId = 1;
-console.time(":::TIMMER:::");
+console.time(":::TIMER:::");
 const insertBatch = async () => {
   const values = [];
   for (let i = 0; i < batchSize && currentId <= totalSize; i++) {
@@ -24,7 +24,7 @@ const insertBatch = async () => {
   }
 
   if (!values.length) {
-    console.timeEnd(":::TIMMER:::");
+    console.timeEnd(":::TIMER:::");
     pool.end((err) => {
       if (err) {
         console.log(`error occurred while running batch`);
