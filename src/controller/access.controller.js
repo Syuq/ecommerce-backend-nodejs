@@ -26,12 +26,10 @@ class AccessController {
         }).send(res)
     }
     signUp = async (req,res,next)=>{
-
         new CREATED({
             message:'Register',
             metadata :await AccessService.signUp(req.body)
         }).send(res)
- 
     }
 }
 

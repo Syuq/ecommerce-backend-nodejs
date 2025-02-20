@@ -20,5 +20,6 @@
     "helmet": "^7.2.0",
     "mongoose": "^8.9.2",
     "morgan": "^1.10.0"
-  }
+  },
+  "packageManager": "yarn@1.22.19+sha1.4ba7fc5c6e704fce2066ecbfb0b0d8976fe62447"
 }

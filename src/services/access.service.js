@@ -17,8 +17,6 @@ const RoleShop = {
 }
 class AccessService
 {
-
-
     /*
         check this token used?
     */
@@ -31,17 +29,16 @@ class AccessService
             console.log({userId,email})
             await keyTokenService.deleteKeyById(userId)
             throw new ForbiddenError('Something wrong happen !! plz relogin')
-
         }
         const holdToken = await keyTokenService.findByRefreshToken(refreshToken)
-        if(!holdToken) throw new AuthFailureError("Shop is not registed")
+        if(!holdToken) throw new AuthFailureError("Shop is not register")
 
         // verify token
         const {userId,email} = await verifyJWT(refreshToken,holdToken.privateKey)
         console.log('[2]--',{userId,email})
         //check userid 
         const foundShop = await findByEmail({email})
-        if(!foundShop) throw new AuthFailureError("Shop is not registed")
+        if(!foundShop) throw new AuthFailureError("Shop is not register")
 
         const token = await createTokenPair({UserId:foundShop._id,email},holdToken.publicKey,holdToken.privateKey)
         await holdToken.updateOne({
@@ -67,10 +64,10 @@ class AccessService
         }
         if(keyStore.refreshToken!=refreshToken)
         {
-            throw new AuthFailureError("Shop is not registed ")
+            throw new AuthFailureError("Shop is not register ")
         }
         const foundShop = await findByEmail({email})
-        if(!foundShop) throw new AuthFailureError("Shop is not registed")
+        if(!foundShop) throw new AuthFailureError("Shop is not register")
 
         const token = await createTokenPair({UserId:foundShop._id,email},keyStore.publicKey,keyStore.privateKey)
         await keyStore.updateOne({
@@ -85,7 +82,6 @@ class AccessService
             user,
             token
         }
-
         
     }
     static logout = async(keyStore)=>
