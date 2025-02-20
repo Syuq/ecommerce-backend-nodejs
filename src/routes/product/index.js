@@ -21,7 +21,7 @@ route.post('/unpublish/:id',asyncHandler(ProductController.unpublishProductbySho
 /**
  * This is get all products for shop, not unregistered user so must go through authentication step to verify token
  */
-route.get('/draf/all',asyncHandler(ProductController.getAllDrafForShop))
+route.get('/draf/all',asyncHandler(ProductController.getAllDraftForShop))
 route.get('/published/all',asyncHandler(ProductController.getAllPublishForShop))
 
 module.exports=route

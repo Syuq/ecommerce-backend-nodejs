@@ -9,7 +9,6 @@ const insertInventory = async({
         invent_stock:stock,
         invent_location:location,
         invent_shopId:shopId,
-
     })
 }
 
@@ -27,7 +26,6 @@ const reservationInventory = async ({productId,quantity,cartId})=>{
                 quantity,
                 cartId,
                 createOn:new Date()
-
             }
         }
     }, options ={upsert:true,new:true}

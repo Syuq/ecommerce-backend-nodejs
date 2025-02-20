@@ -123,7 +123,7 @@ class AccessService
             const holderShop = await shopModel.findOne({email}).lean()// lean trả về object nhanh hơn 
             if(holderShop)
             {
-                throw new BadRequest('Error: Shop already registed')
+                throw new BadRequest('Error: Shop already register')
             }
             const passwordHash = await bcrypt.hash(password,10);
             const newShop = await shopModel.create({
