@@ -18,7 +18,6 @@ const searchProductByuser = async ({keySearch})=>{
         {score:{$meta:'textScore'}})
         .sort({score:{$meta:'textScore'}}).lean()
     return results
-
 }
 
 const PublishProductByshop = async({product_shop,product_id})=>{
