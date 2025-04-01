@@ -1,0 +1,20 @@
+const os = require('os');
+
+console.log('CPU count:', os.cpus().length);
+console.log('Free memory:', os.freemem());
+console.log('Total memory:', os.totalmem());
+console.log('Memory usage:', process.memoryUsage());
+console.log('Uptime:', process.uptime());
+console.log('Platform:', os.platform());
+console.log('Arch:', os.arch());
+console.log('Node version:', process.version);
+console.log('Process ID:', process.pid);
+console.log('Process title:', process.title);
+console.log('Process uptime:', process.uptime());
+console.log('Node environment:', process.env.NODE_ENV);
+console.log('Node version:', process.versions);
+console.log('Node release:', process.release);
+console.log('Node exec path:', process.execPath);
+console.log('Node exec cwd:', process.cwd());
+console.log('Node exec uid:', process.getuid());
+console.log('Node exec gid:', process.getgid());
