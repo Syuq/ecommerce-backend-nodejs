@@ -9,6 +9,7 @@ const pool = mysql.createPool({
 
 const batchSize = 100000;
 const totalSize = 10_000_000;
+// :::::::::::::TIMER:::::::::::::: 2:19.007 (m:ss.mmm)
 
 let currentId = 1;
 console.time(':::::::::::::TIMER:::::::::::::');
