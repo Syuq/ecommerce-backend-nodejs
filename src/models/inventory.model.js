@@ -1,6 +1,6 @@
 const {Schema,model} = require('mongoose'); // Erase if already required
-const DOCUMENT_NAME='Iventory'
-const COLLECTION_NAME='Iventories'
+const DOCUMENT_NAME='Inventory'
+const COLLECTION_NAME='Inventories'
 // Declare the Schema of the Mongo model !dmbg
 var inventoriesSchema = new Schema({
     invent_productId:{type:Schema.Types.ObjectId,ref:'Product'},

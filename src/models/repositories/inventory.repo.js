@@ -2,7 +2,7 @@ const { convertToObjectIdMongoDb } = require("../../utils")
 const { inventory } = require("../inventory.model")
 const {Types} =require("mongoose")
 const insertInventory = async({
-    productId,shopId,stock,location='unkown'
+    productId,shopId,stock,location='unknown'
 })=>{
     return await inventory.create({
         invent_productId:productId,

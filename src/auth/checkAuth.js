@@ -35,12 +35,12 @@ const permission = (permission)=>{
         if(!req.objKey.permissions)
         {
             return res.status(403).json({
-                message:"forbidden error perrmissions"
+                message:"forbidden error permissions"
             })
         }
         console.log(`permissions::`,req.objKey.permissions)
-        const validPermisson=req.objKey.permissions.includes(permission)
-        if(!validPermisson)
+        const validPermission=req.objKey.permissions.includes(permission)
+        if(!validPermission)
         {
             return res.status(403).json({
                 message:'permission denied'

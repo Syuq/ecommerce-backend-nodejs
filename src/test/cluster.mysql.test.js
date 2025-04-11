@@ -7,9 +7,10 @@ const batchSize = 100000;
 const totalSize = 10_000_000;
 const poolConfig = {
   host: 'localhost',
-  user: 'tipjs',
-  password: 'tipjs123456',
-  database: 'shopDEV'
+  port: 8811,
+  user: 'root',
+  password: 'tipjs',
+  database: 'test'
 };
 
 if (cluster.isMaster) {

@@ -42,7 +42,7 @@ class LoggerService {
     {
         const chanel =this.client.channels.cache.get(this.chanelId)
         if(!chanel){
-            console.error(`Couldnt find the chanel id`,this.chanelId)
+            console.error(`Couldn't find the chanel id`,this.chanelId)
             return
         }
         chanel.send(message).catch(e=>console.error(e))

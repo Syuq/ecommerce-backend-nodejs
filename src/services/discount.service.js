@@ -1,4 +1,5 @@
 'use strict'
+
 const { min } = require('lodash')
 const {
     BadRequest,
