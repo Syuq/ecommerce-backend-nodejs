@@ -1,20 +1,21 @@
-'use strict'
+'use strict';
 
-const Logger = require('../logger/discord.log.v1')
+const Logger = require('../logger/discord.log');
 
-const pushTologDiscord = async (req,res,next)=>{
-    try {
-        Logger.sendToFormatCode({
-            title:`Method:${req.method}`,
-            code:req.method==='GET'?req.query:req.body,
-            message:`${req.get('host')}${req.originalUrl}`
-        })
-        return next()
-    } catch (error) {
-        next(error)
-    }
-}
+const pushToLogDiscord = async (req, res, next) => {
+  try {
+    Logger.sendToFormatCode({
+      title: `Method:${req.method}`,
+      code: req.method === 'GET' ? req.query : req.body,
+      message: `${req.get('host')}${req.originalUrl}`
+    });
+    // Logger.sendToMessage(` this is:: ${req.get('host')}`);
+    return next();
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = {
-    pushTologDiscord
-}
+  pushToLogDiscord
+};
