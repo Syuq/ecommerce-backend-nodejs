@@ -50,7 +50,7 @@ class ProductController {
 
   /// query ///
   /**
-   * @desc get all Draf for shop
+   * @desc get all Draft for shop
    * @param {Number} limit
    * @param {Number} skip
    * @return { JSON }

@@ -114,11 +114,25 @@ class Product {
       /**
        * add product_stock in inventory collection
        */
-      await insertInventory({
+      const invenData = await insertInventory({
         productId: newProduct._id,
         shopId: this.shopId,
         stock: this.product_quantity
       });
+
+      // push noti to system collection
+      pushNotiToSystem({
+        type: 'SHOP-001',
+        receivedId: 1,
+        senderId: this.product_shop,
+        options: {
+          shop_name: this.product_shop,
+          product_name: this.product_name
+        }
+      })
+        .then((rs) => console.log(res))
+        .catch(console.error);
+      console.log('invenData::', invenData);
     }
     return newProduct;
   }
@@ -146,7 +160,7 @@ class Clothing extends Product {
      *  b:null
      * } k truyền những giá trị như v
      */
-    // 1. remove attribue has val nul or undif
+    // 1. remove attribute has val nul or undif
     const objectParams = removeUndefinedObject(this);
     // 2. check xem update o cho nao?
 
