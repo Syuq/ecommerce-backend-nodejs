@@ -35,8 +35,8 @@ const createTokenPair = async (payload, publicKey, privateKey) => {
   }
 };
 /*  ----- authentication---------
-    1- kiểm tra userId có missing ?
-    2- get accestoken
+    1- check userId có missing ?
+    2- get accessToken
     3- verifytoken 
     4- check user in dbs
     5- check keyStore with this userId
@@ -75,7 +75,7 @@ const authenticationV2 = asyncHandler(async (req, res, next) => {
       if (userId != decodeUser.UserId) throw new AuthFailureError('Invalid UserId');
       req.keyStore = keyStore;
       req.user = decodeUser;
-      req.refreshToken = refreshToken; // truyen vao middleware
+      req.refreshToken = refreshToken; // transmit to middleware
 
       return next();
     } catch (error) {

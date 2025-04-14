@@ -27,7 +27,7 @@ class AccessService {
       const { userId, email } = await verifyJWT(refreshToken, foundToken.privateKey);
       console.log({ userId, email });
       await keyTokenService.deleteKeyById(userId);
-      throw new ForbiddenError('Something wrong happen !! plz relogin');
+      throw new ForbiddenError('Something wrong happen !! plz reLogin');
     }
     const holdToken = await keyTokenService.findByRefreshToken(refreshToken);
     if (!holdToken) throw new AuthFailureError('Shop is not register');
@@ -45,7 +45,7 @@ class AccessService {
         refreshToken: token.refreshToken
       },
       $addToSet: {
-        refreshTokenUsed: refreshToken // da dc su dung de lay token moi roi
+        refreshTokenUsed: refreshToken // has been used to get new tokens
       }
     });
     return {
@@ -57,7 +57,7 @@ class AccessService {
     const { userId, email } = user;
     if (keyStore.refreshTokenUsed.includes(refreshToken)) {
       await keyTokenService.deleteKeyById(userId);
-      throw new ForbiddenError('Something wrong happen !! plz relogin');
+      throw new ForbiddenError('Something wrong happen !! plz reLogin');
     }
     if (keyStore.refreshToken != refreshToken) {
       throw new AuthFailureError('Shop is not register ');
@@ -71,7 +71,7 @@ class AccessService {
         refreshToken: token.refreshToken
       },
       $addToSet: {
-        refreshTokenUsed: refreshToken // da dc su dung de lay token moi roi
+        refreshTokenUsed: refreshToken // has been used to get new tokens
       }
     });
     return {
@@ -93,7 +93,7 @@ class AccessService {
     // check email
     const foundShop = await findByEmail({ email });
     if (!foundShop) throw new BadRequest('Error : shop not registered');
-    //match password
+    // match password
     const match = bcrypt.compare(password, foundShop.password);
     if (!match) throw new AuthFailureError('Authentication error ');
     // create token
@@ -115,7 +115,7 @@ class AccessService {
   static signUp = async ({ name, email, password }) => {
     //try {
     // check email exists?
-    const holderShop = await shopModel.findOne({ email }).lean(); // lean trả về object nhanh hơn
+    const holderShop = await shopModel.findOne({ email }).lean(); // lean returns objects faster
     if (holderShop) {
       throw new BadRequest('Error: Shop already register');
     }
@@ -128,11 +128,11 @@ class AccessService {
     });
     if (newShop) {
       // create privateKey , publicKey
-      // privateKey đẩy cho người dùng k lưu trong hệ thống
-      // publickey thì lưu trong hệ thống
-      // publickey dùng để verify token
-      // giả sử hacker hack được vào hệ thống của chúng ta lấy được publickey nhưng không dùng để sign token
-      // nó chỉ có nvu verify nên phải biết được cả 2 dạng key
+      // privateKey pushed to user not stored in system
+      // publickey is stored in system
+      // publickey is used to verify token
+      // suppose hacker hacks into our system and gets publickey but does not use to sign token
+      // it only has nvu verify so must know both types of keys
 
       // const {privateKey,publicKey} = crypto.generateKeyPairSync('rsa',{
       //     modulusLength:4096,
@@ -154,7 +154,7 @@ class AccessService {
       const keyStore = await keyTokenService.createKeyToken({
         userId: newShop._id,
         publicKey,
-        privateKey // lưu vào hàm createKeyToken
+        privateKey // save to function createKeyToken
       });
 
       if (!keyStore) {
