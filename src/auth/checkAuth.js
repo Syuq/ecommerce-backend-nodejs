@@ -24,8 +24,12 @@ const apiKey = async (req, res, next) => {
     }
     req.objKey = objKey;
     return next();
-  } catch (error) {}
+  } catch (error) {
+    console.error('❌ API Key Middleware Error:', error);
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
 };
+
 const permission = (permission) => {
   return (req, res, next) => {
     if (!req.objKey.permissions) {

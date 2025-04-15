@@ -1,12 +1,14 @@
 const express = require('express');
-
 const route = express.Router();
 const { apiKey, permission } = require('../auth/checkAuth');
 const { pushToLogDiscord } = require('../middlewares');
 // add log to discord router
 route.use(pushToLogDiscord);
+
+// Define public routes first - BEFORE apiKey middleware
+route.use('/v1/api', require('./access/index'));
 //check APi
-debugger;
+// debugger;
 route.use(apiKey); //=> trỏ tới middleware (auth)
 //check permission
 route.use(permission('0000'));

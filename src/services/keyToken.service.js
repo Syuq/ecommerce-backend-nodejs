@@ -6,35 +6,31 @@ const {
 } = require('mongoose');
 
 class KeyTokenService {
-  static createKeyToken = async ({ userId, publicKey, privateKey, refreshToken }) => {
+  static createKeyToken = async ({ userId, publicKey, privateKey, refreshToken = null }) => {
     try {
-      // lv 0
-      // const token = await keytokenModel.create({
-      //     userId,
-      //     publicKey,
-      //     privateKey
-      // })
-      // return token ? token.publicKey :null
+      // Log incoming data for debugging
+      console.log('Creating key token for user:', userId);
+      console.log('Keys provided:', !!publicKey, !!privateKey);
 
-      // lv xxx refreshToken
-      const filter = { user: userId },
-        update = {
-          publicKey,
-          privateKey,
-          refreshTokenUsed: [],
-          refreshToken
-        },
-        options = { upsert: true, new: true };
+      const filter = { user: userId };
+      const update = {
+        publicKey,
+        privateKey,
+        refreshTokenUsed: [],
+        refreshToken: refreshToken || null
+      };
+      const options = { upsert: true, new: true };
 
       const token = await keytokenModel.findOneAndUpdate(filter, update, options);
       return token ? token.publicKey : null;
     } catch (error) {
+      console.error('KeyToken creation error:', error);
       return error;
     }
   };
 
   static findByUserId = async ({ userId }) => {
-    return await keytokenModel.findOne({ user: Types.ObjectId(userId) });
+    return await keytokenModel.findOne({ user: userId });
   };
 
   static removeKeyById = async (id) => {

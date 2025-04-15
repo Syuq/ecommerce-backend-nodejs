@@ -42,6 +42,10 @@ build/Release
 node_modules/
 jspm_packages/
 
+# postman
+src/postman/
+postman/
+
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
 

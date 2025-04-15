@@ -97,7 +97,7 @@ class AccessService {
     const foundShop = await findByEmail({ email });
     if (!foundShop) throw new BadRequest('Error : shop not registered');
     // match password
-    const match = bcrypt.compare(password, foundShop.password);
+    const match = await bcrypt.compare(password, foundShop.password);
     if (!match) throw new AuthFailureError('Authentication error ');
     // create token
     const privateKey = crypto.randomBytes(64).toString('hex');
@@ -116,12 +116,12 @@ class AccessService {
     };
   };
   static signUp = async ({ name, email, password }) => {
-    //try {
-    // check email exists?
-    const holderShop = await shopModel.findOne({ email }).lean(); // lean returns objects faster
+    // Check email exists?
+    const holderShop = await shopModel.findOne({ email }).lean();
     if (holderShop) {
       throw new BadRequest('Error: Shop already register');
     }
+
     const passwordHash = await bcrypt.hash(password, 10);
     const newShop = await shopModel.create({
       name,
@@ -129,47 +129,39 @@ class AccessService {
       password: passwordHash,
       role: [RoleShop.SHOP]
     });
-    if (newShop) {
-      // create privateKey , publicKey
-      // privateKey pushed to user not stored in system
-      // publickey is stored in system
-      // publickey is used to verify token
-      // suppose hacker hacks into our system and gets publickey but does not use to sign token
-      // it only has nvu verify so must know both types of keys
 
-      // const {privateKey,publicKey} = crypto.generateKeyPairSync('rsa',{
-      //     modulusLength:4096,
-      //     publicKeyEncoding:  {
-      //         type:'pkcs1',
-      //         format:'pem'
-      //     },
-      //     privateKeyEncoding:  {
-      //         type:'pkcs1',
-      //         format:'pem'
-      //     }
-      // })
+    if (newShop) {
+      // Generate private and public keys - using simple hex strings
       const privateKey = crypto.randomBytes(64).toString('hex');
       const publicKey = crypto.randomBytes(64).toString('hex');
 
-      // Public key Cryptography Standards !
+      console.log('Generated keys:', {
+        privateKeyPreview: privateKey.substring(0, 20),
+        publicKeyPreview: publicKey.substring(0, 20)
+      });
 
-      console.log({ privateKey, publicKey }); // save collection KeyStore
+      // Create token pair first
+      const token = await createTokenPair({ UserId: newShop._id, email }, publicKey, privateKey);
+
+      if (!token || token instanceof Error) {
+        console.error('Token creation failed:', token);
+        throw new Error('Failed to create authentication tokens');
+      }
+
+      // Then save keys and refresh token to database
       const keyStore = await keyTokenService.createKeyToken({
         userId: newShop._id,
         publicKey,
-        privateKey // save to function createKeyToken
+        privateKey,
+        refreshToken: token.refreshToken
       });
 
+      console.log('KeyStore creation result:', keyStore ? 'Success' : 'Failed');
+
       if (!keyStore) {
-        return {
-          code: 'xxxx',
-          message: 'keyStore error'
-        };
+        throw new Error('KeyStore error');
       }
-      //const publickeyObject = crypto.createPublicKey(publicKeyString)
-      //create token pair
-      const token = await createTokenPair({ UserId: newShop._id, email }, publicKey, privateKey);
-      console.log('Create token Success  ', token);
+
       return {
         code: 201,
         metaData: {
@@ -178,13 +170,6 @@ class AccessService {
         }
       };
     }
-    // } catch (error) {
-    //     return {
-    //         code: '201',
-    //         message:error.message,
-    //         status:'error'
-    //     }
-    // }
   };
 }
 

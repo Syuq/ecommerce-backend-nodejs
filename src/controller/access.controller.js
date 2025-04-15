@@ -27,6 +27,13 @@ class AccessController {
       metadata: await AccessService.login(req.body)
     }).send(res);
   };
+
+  // Signup ->
+  // Tạo user ->
+  //   Tạo key pair (✔ RSA PEM) ->
+  //     Lưu vào keyStore (✔ validate keys) ->
+  //       Tạo token (✔ RS256) ->
+  //         Trả về token + user info
   signUp = async (req, res, next) => {
     // try {
     //   console.log(`[P]::signUp::`, req.body);

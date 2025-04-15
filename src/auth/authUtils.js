@@ -15,24 +15,35 @@ const HEADER = {
 
 const createTokenPair = async (payload, publicKey, privateKey) => {
   try {
-    // accessToken
-    const accessToken = await JWT.sign(payload, publicKey, {
+    // Check if keys are defined
+    if (!publicKey || !privateKey) {
+      console.error('Keys are undefined:', { publicKey, privateKey });
+      throw new Error('Authentication keys are undefined');
+    }
+
+    // For hex string keys, we need to use HS256 algorithm
+    const accessToken = await JWT.sign(payload, privateKey, {
+      algorithm: 'HS256',
       expiresIn: '2 days'
     });
 
     const refreshToken = await JWT.sign(payload, privateKey, {
-      expiresIn: '2 days'
+      algorithm: 'HS256',
+      expiresIn: '7 days'
     });
 
-    JWT.verify(accessToken, publicKey, (err, decode) => {
+    // Verify using the same key for symmetric algorithms like HS256
+    JWT.verify(accessToken, privateKey, (err, decode) => {
       if (err) {
         console.error('error verify::', err);
       } else {
         console.log('decode verify::', decode);
       }
     });
+
     return { accessToken, refreshToken };
   } catch (error) {
+    console.error('Token creation error:', error);
     return error;
   }
 };
