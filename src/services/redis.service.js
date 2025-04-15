@@ -46,9 +46,9 @@ const pexpireAsync = promisify(redisClient.pExpire).bind(redisClient);
 const setnxAsync = promisify(redisClient.setNX).bind(redisClient);
 
 const acquireLock = async (productId, quantity, cartId) => {
-  const key = `lock_v2023_${productId}`;
+  const key = `lock_v2025_${productId}`;
   const retryTime = 10;
-  const expireTime = 3000; // 3 second tam lock
+  const expireTime = 3000; // 3 second temporary lock
 
   for (let i = 0; i < retryTime.length; i++) {
     // create a key, whoever holds the key can enter
