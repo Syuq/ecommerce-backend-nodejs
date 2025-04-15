@@ -1,5 +1,8 @@
+'use strict';
+
 const AccessService = require('../services/access.service');
 const { OK, CREATED, SuccessResponse } = require('../core/success.response');
+
 class AccessController {
   handlerRefreshToken = async (req, res, next) => {
     new SuccessResponse({
@@ -25,6 +28,16 @@ class AccessController {
     }).send(res);
   };
   signUp = async (req, res, next) => {
+    // try {
+    //   console.log(`[P]::signUp::`, req.body);
+    //   /*
+    //   200 Ok
+    //   201 CREATED
+    //   */
+    //   return res.status(201).json(await AccessService.signUp(req.body));
+    // } catch (error) {
+    //   next(error);
+    // }
     new CREATED({
       message: 'Register',
       metadata: await AccessService.signUp(req.body)

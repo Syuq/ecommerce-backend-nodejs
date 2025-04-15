@@ -3,6 +3,7 @@
 const JWT = require('jsonwebtoken');
 const asyncHandler = require('../helpers/asyncHandler');
 const { AuthFailureError, NotFoundError } = require('../core/error.response');
+//service
 const { findByUserId } = require('../services/keyToken.service');
 
 const HEADER = {
@@ -11,6 +12,7 @@ const HEADER = {
   CLIENT_ID: 'x-client-id',
   REFRESHTOKEN: 'x-rtoken-id'
 };
+
 const createTokenPair = async (payload, publicKey, privateKey) => {
   try {
     // accessToken
@@ -35,12 +37,12 @@ const createTokenPair = async (payload, publicKey, privateKey) => {
   }
 };
 /*  ----- authentication---------
-    1- check userId có missing ?
+    1- check userId có missing ???
     2- get accessToken
-    3- verifytoken 
-    4- check user in dbs
-    5- check keyStore with this userId
-    6 if OKall -> return next
+    3- verifyToken 
+    4- check user in dbs ?
+    5- check keyStore with this userId ?
+    6 if OKall -> return next()
 */
 const authentication = asyncHandler(async (req, res, next) => {
   const userId = req.headers[HEADER.CLIENT_ID];
@@ -61,13 +63,25 @@ const authentication = asyncHandler(async (req, res, next) => {
     throw error;
   }
 });
+
+/**
+ * Authentication middleware for handling both access and refresh token validation
+ *
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @param {Function} next - Express next middleware function
+ * @throws {AuthFailureError} If userId is missing, token is invalid, or UserId mismatch
+ * @throws {NotFoundError} If keystore is not found for the user
+ */
 const authenticationV2 = asyncHandler(async (req, res, next) => {
   const userId = req.headers[HEADER.CLIENT_ID];
   if (!userId) throw new AuthFailureError('Invalid Request');
 
+  //2
   const keyStore = await findByUserId({ userId });
   if (!keyStore) throw new NotFoundError('Not Found keystore');
 
+  //3
   if (req.headers[HEADER.REFRESHTOKEN]) {
     try {
       const refreshToken = req.headers[HEADER.REFRESHTOKEN];
@@ -94,9 +108,11 @@ const authenticationV2 = asyncHandler(async (req, res, next) => {
     throw error;
   }
 });
+
 const verifyJWT = async (token, keySecret) => {
   return await JWT.verify(token, keySecret);
 };
+
 module.exports = {
   createTokenPair,
   authentication,
