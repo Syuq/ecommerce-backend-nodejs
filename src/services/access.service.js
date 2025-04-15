@@ -57,18 +57,20 @@ class AccessService {
     const { userId, email } = user;
     if (keyStore.refreshTokenUsed.includes(refreshToken)) {
       await keyTokenService.deleteKeyById(userId);
-      throw new ForbiddenError('Something wrong happen !! plz reLogin');
+      throw new ForbiddenError('Something wrong happen !! Pls reLogin');
     }
     if (keyStore.refreshToken != refreshToken) {
       throw new AuthFailureError('Shop is not register ');
     }
     const foundShop = await findByEmail({ email });
-    if (!foundShop) throw new AuthFailureError('Shop is not register');
-
-    const token = await createTokenPair({ UserId: foundShop._id, email }, keyStore.publicKey, keyStore.privateKey);
-    await keyStore.updateOne({
+    if (!foundShop) throw new AuthFailureError('Shop is not register 2');
+    // create 1 new token pair
+    // const tokens = await createTokenPair({ userId: foundShop._id, email }, keyStore.publicKey, keyStore.privateKey);
+    const tokens = await createTokenPair({ userId, email }, holderToken.publicKey, holderToken.privateKey);
+    // update token
+    await keyStore.update({
       $set: {
-        refreshToken: token.refreshToken
+        refreshToken: tokens.refreshToken
       },
       $addToSet: {
         refreshTokenUsed: refreshToken // has been used to get new tokens
@@ -76,9 +78,10 @@ class AccessService {
     });
     return {
       user,
-      token
+      tokens
     };
   };
+
   static logout = async (keyStore) => {
     const delKey = await keyTokenService.removeKeyById(keyStore._id);
     console.log({ delKey });
@@ -148,7 +151,7 @@ class AccessService {
       const privateKey = crypto.randomBytes(64).toString('hex');
       const publicKey = crypto.randomBytes(64).toString('hex');
 
-      // public key cryptography standards !
+      // Public key Cryptography Standards !
 
       console.log({ privateKey, publicKey }); // save collection KeyStore
       const keyStore = await keyTokenService.createKeyToken({
