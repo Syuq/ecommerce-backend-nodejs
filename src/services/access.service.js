@@ -40,7 +40,7 @@ class AccessService {
     if (!foundShop) throw new AuthFailureError('Shop is not register');
 
     const token = await createTokenPair({ UserId: foundShop._id, email }, holdToken.publicKey, holdToken.privateKey);
-    await holdToken.updateOne({
+    await holdToken.update({
       $set: {
         refreshToken: token.refreshToken
       },
@@ -53,8 +53,10 @@ class AccessService {
       token
     };
   };
+
   static handlerRefreshTokenV2 = async ({ keyStore, user, refreshToken }) => {
     const { userId, email } = user;
+
     if (keyStore.refreshTokenUsed.includes(refreshToken)) {
       await keyTokenService.deleteKeyById(userId);
       throw new ForbiddenError('Something wrong happen !! Pls reLogin');
@@ -63,12 +65,12 @@ class AccessService {
       throw new AuthFailureError('Shop is not register ');
     }
     const foundShop = await findByEmail({ email });
-    if (!foundShop) throw new AuthFailureError('Shop is not register 2');
+    if (!foundShop) throw new AuthFailureError('Shop is not register v2');
     // create 1 new token pair
     // const tokens = await createTokenPair({ userId: foundShop._id, email }, keyStore.publicKey, keyStore.privateKey);
-    const tokens = await createTokenPair({ userId, email }, holderToken.publicKey, holderToken.privateKey);
+    const tokens = await createTokenPair({ userId, email }, keyStore.publicKey, keyStore.privateKey);
     // update token
-    await keyStore.update({
+    await keyStore.updateOne({
       $set: {
         refreshToken: tokens.refreshToken
       },
@@ -76,6 +78,7 @@ class AccessService {
         refreshTokenUsed: refreshToken // has been used to get new tokens
       }
     });
+
     return {
       user,
       tokens
@@ -99,6 +102,7 @@ class AccessService {
     // match password
     const match = await bcrypt.compare(password, foundShop.password);
     if (!match) throw new AuthFailureError('Authentication error ');
+
     // create token
     const privateKey = crypto.randomBytes(64).toString('hex');
     const publicKey = crypto.randomBytes(64).toString('hex');
@@ -115,6 +119,7 @@ class AccessService {
       token
     };
   };
+
   static signUp = async ({ name, email, password }) => {
     // Check email exists?
     const holderShop = await shopModel.findOne({ email }).lean();
