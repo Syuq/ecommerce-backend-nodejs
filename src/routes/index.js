@@ -6,7 +6,7 @@ const { pushToLogDiscord } = require('../middlewares');
 route.use(pushToLogDiscord);
 
 // Define public routes first - BEFORE apiKey middleware
-route.use('/v1/api', require('./access/index'));
+// route.use('/v1/api', require('./access/index'));
 //check APi
 // debugger;
 route.use(apiKey); //=> trỏ tới middleware (auth)

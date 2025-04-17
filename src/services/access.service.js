@@ -90,11 +90,12 @@ class AccessService {
     console.log({ delKey });
     return delKey;
   };
-  // - check mail in dbs
-  // - match password
-  // - create AT vs RT and save   access token vs refresh token
-  // - generate token
-  // - get Data return login
+  /* - check mail in dbs
+     - match password
+     - create AT vs RT and save   access token vs refresh token
+     - generate token
+     - get Data return login
+  */
   static login = async ({ email, password, refreshToken = null }) => {
     // check email
     const foundShop = await findByEmail({ email });

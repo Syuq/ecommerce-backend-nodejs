@@ -22,7 +22,7 @@ const createTokenPair = async (payload, publicKey, privateKey) => {
     }
 
     // For hex string keys, we need to use HS256 algorithm
-    const accessToken = await JWT.sign(payload, privateKey, {
+    const accessToken = await JWT.sign(payload, publicKey, {
       algorithm: 'HS256',
       expiresIn: '2 days'
     });

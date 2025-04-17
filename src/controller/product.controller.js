@@ -38,6 +38,7 @@ class ProductController {
       })
     }).send(res);
   };
+
   unpublishProductByShop = async (req, res, next) => {
     new SuccessResponse({
       message: 'unpublishProductByShop Success',
@@ -58,7 +59,7 @@ class ProductController {
   getAllDraftForShop = async (req, res, next) => {
     new SuccessResponse({
       message: 'Get List draft success!',
-      metadata: await ProductService.findAllDraftForShop({
+      metadata: await ProductService.findAllDraftsForShop({
         product_shop: req.user.UserId
       })
     }).send(res);
@@ -78,12 +79,14 @@ class ProductController {
       })
     }).send(res);
   };
+
   getListSearchProduct = async (req, res, next) => {
     new SuccessResponse({
       message: 'Get List search product success!',
       metadata: await ProductService.searchProduct(req.params)
     }).send(res);
   };
+
   findAllProducts = async (req, res, next) => {
     new SuccessResponse({
       message: 'Find all products !',

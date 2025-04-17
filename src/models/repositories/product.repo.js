@@ -1,13 +1,18 @@
+'use strict';
+
 const { product, electronic, furniture, clothing } = require('../../models/product.model');
 const { Types } = require('mongoose');
 const { getSelectData, getUnSelectData, convertToObjectIdMongoDb } = require('../../utils/index');
 const { findByIdAndUpdate } = require('../keytoken.model');
-const findAllDraftForShop = async ({ query, limit, skip }) => {
+
+const findAllDraftsForShop = async ({ query, limit, skip }) => {
   return await queryProduct({ query, limit, skip });
 };
+
 const findAllPublishForShop = async ({ query, limit, skip }) => {
   return await queryProduct({ query, limit, skip });
 };
+
 const searchProductByUser = async ({ keySearch }) => {
   const regexSearch = new RegExp(keySearch);
   const results = await product
@@ -25,8 +30,8 @@ const searchProductByUser = async ({ keySearch }) => {
 
 const PublishProductByShop = async ({ product_shop, product_id }) => {
   const foundShop = await product.findOne({
-    product_shop: new Types.ObjectId(product_shop),
-    _id: new Types.ObjectId(product_id)
+    product_shop: Types.ObjectId(product_shop),
+    _id: Types.ObjectId(product_id)
   });
   if (!foundShop) {
     return null;
@@ -37,10 +42,11 @@ const PublishProductByShop = async ({ product_shop, product_id }) => {
   const { modifiedCount } = await foundShop.updateOne(foundShop);
   return modifiedCount;
 };
+
 const unPublishProductByShop = async ({ product_shop, product_id }) => {
   const foundShop = await product.findOne({
-    product_shop: new Types.ObjectId(product_shop),
-    _id: new Types.ObjectId(product_id)
+    product_shop: Types.ObjectId(product_shop),
+    _id: Types.ObjectId(product_id)
   });
   if (!foundShop) {
     return null;
@@ -70,6 +76,7 @@ const queryProduct = async ({ query, limit, skip }) => {
     .lean()
     .exec();
 };
+
 const findProduct = async ({ product_id, unSelect }) => {
   return await product.findById(product_id).select(getUnSelectData(unSelect));
 };
@@ -98,7 +105,7 @@ const checkProductBySever = async (products) => {
 };
 
 module.exports = {
-  findAllDraftForShop,
+  findAllDraftsForShop,
   PublishProductByShop,
   findAllPublishForShop,
   unPublishProductByShop,

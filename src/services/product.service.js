@@ -1,7 +1,7 @@
 const { product, clothing, electronic, furniture } = require('../models/product.model');
 const { BadRequest, ForbiddenError } = require('../core/error.response');
 const {
-  findAllDraftForShop,
+  findAllDraftsForShop,
   PublishProductByShop,
   findAllPublishForShop,
   unPublishProductByShop,
@@ -18,7 +18,7 @@ const { insertInventory } = require('../models/repositories/inventory.repo');
 class ProductFactory {
   /*
         type:'Clothing',
-        payload : dữ liệu truyền vào 
+        payload : data input 
     */
   static productRegistry = {};
   static registerProductType(type, classRef) {
@@ -48,9 +48,9 @@ class ProductFactory {
   // End PUT //
 
   // query ///
-  static async findAllDraftForShop({ product_shop, limit = 50, skip = 0 }) {
+  static async findAllDraftsForShop({ product_shop, limit = 50, skip = 0 }) {
     const query = { product_shop, isDraft: true };
-    return await findAllDraftForShop({ query, limit, skip });
+    return await findAllDraftsForShop({ query, limit, skip });
   }
 
   static async findAllPublishForShop({ product_shop, limit = 50, skip = 0 }) {
@@ -70,7 +70,7 @@ class ProductFactory {
       select: ['product_name', 'product_price', 'product_thumb', 'product_shop']
     });
   }
-  // unselect là bỏ trọn những field không liên quan
+  // unselect is to deselect irrelevant fields
   static async findProduct({ product_id }) {
     return await findProduct({ product_id, unSelect: ['__v', 'product_variation'] });
   }
@@ -158,9 +158,9 @@ class Clothing extends Product {
      * {
      *  a:undefined,
      *  b:null
-     * } k truyền những giá trị như v
+     * } no passes values like v
      */
-    // 1. remove attribute has val nul or undif
+    // 1. remove attribute has val nul or undefined
     const objectParams = removeUndefinedObject(this);
     // 2. check xem update o cho nao?
 
@@ -202,6 +202,7 @@ class Furniture extends Product {
     return newProduct;
   }
 }
+
 ProductFactory.registerProductType('Electronics', Electronics);
 ProductFactory.registerProductType('Furniture', Furniture);
 ProductFactory.registerProductType('Clothing', Clothing);
